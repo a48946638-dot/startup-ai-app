@@ -1,17 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Startup AI</title>
+  <title>Pocket Stylist AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{
+      margin:0;
+      background:#0f0f0f;
+      font-family:Arial, sans-serif;
+      color:white;
+      text-align:center;
+    }
+    header{
+      padding:20px;
+      font-size:28px;
+      font-weight:bold;
+      background:#111;
+      border-bottom:1px solid #222;
+    }
+    .container{
+      margin-top:40px;
+    }
+    button{
+      margin:15px;
+      padding:15px 30px;
+      border:none;
+      border-radius:25px;
+      font-size:16px;
+      cursor:pointer;
+      background:#00ff99;
+      transition:0.3s;
+    }
+    button:hover{
+      background:#00cc77;
+      transform:scale(1.05);
+    }
+    .section{
+      display:none;
+      margin-top:30px;
+    }
+    input{
+      margin-top:20px;
+      padding:10px;
+    }
+  </style>
 </head>
-<body style="background-color:black; color:white; text-align:center; margin-top:100px;">
 
-    <h1>🚀 Startup AI</h1>
-    <p>Yapay zeka destekli uygulamam yayında!</p>
+<body>
 
-    <button onclick="alert('Yakında aktif olacak!')" 
-    style="padding:15px; font-size:18px;">
-        Başla
-    </button>
+<header>👔 Pocket Stylist AI</header>
+
+<div class="container">
+  <p>Cebindeki kişisel stil danışmanın</p>
+
+  <button onclick="showOutfit()">Kombin Oluştur</button>
+  <button onclick="showHair()">Saç Modeli Öner</button>
+
+  <div id="outfit" class="section">
+    <h2>Fotoğraf Yükle</h2>
+    <input type="file">
+    <p>AI sana uygun kombin oluşturacak.</p>
+  </div>
+
+  <div id="hair" class="section">
+    <h2>Fotoğraf Yükle</h2>
+    <input type="file">
+    <p>AI sana uygun saç modeli önerecek.</p>
+  </div>
+</div>
+
+<script>
+function showOutfit(){
+  document.getElementById("outfit").style.display="block";
+  document.getElementById("hair").style.display="none";
+}
+function showHair(){
+  document.getElementById("hair").style.display="block";
+  document.getElementById("outfit").style.display="none";
+}
+</script>
 
 </body>
 </html>
