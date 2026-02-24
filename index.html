@@ -35,13 +35,15 @@
       background:#00cc77;
       transform:scale(1.05);
     }
-    .section{
-      display:none;
+    #result{
       margin-top:30px;
-    }
-    input{
-      margin-top:20px;
-      padding:10px;
+      width:80%;
+      margin-left:auto;
+      margin-right:auto;
+      background:#1a1a1a;
+      padding:20px;
+      border-radius:15px;
+      display:none;
     }
   </style>
 </head>
@@ -51,32 +53,43 @@
 <header>👔 Pocket Stylist AI</header>
 
 <div class="container">
-  <p>Cebindeki kişisel stil danışmanın</p>
+  <p>Fotoğraf yükle, sana kombin ve saç modeli önerelim.</p>
 
-  <button onclick="showOutfit()">Kombin Oluştur</button>
-  <button onclick="showHair()">Saç Modeli Öner</button>
+  <input type="file" id="imageInput">
+  <br>
+  <button onclick="analyzeImage()">Analiz Et</button>
 
-  <div id="outfit" class="section">
-    <h2>Fotoğraf Yükle</h2>
-    <input type="file">
-    <p>AI sana uygun kombin oluşturacak.</p>
-  </div>
-
-  <div id="hair" class="section">
-    <h2>Fotoğraf Yükle</h2>
-    <input type="file">
-    <p>AI sana uygun saç modeli önerecek.</p>
-  </div>
+  <div id="result"></div>
 </div>
 
 <script>
-function showOutfit(){
-  document.getElementById("outfit").style.display="block";
-  document.getElementById("hair").style.display="none";
-}
-function showHair(){
-  document.getElementById("hair").style.display="block";
-  document.getElementById("outfit").style.display="none";
+async function analyzeImage() {
+  const fileInput = document.getElementById("imageInput");
+  const resultDiv = document.getElementById("result");
+
+  if (!fileInput.files[0]) {
+    alert("Lütfen bir fotoğraf seç.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.readAsDataURL(fileInput.files[0]);
+
+  reader.onload = async function() {
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = "Analiz ediliyor...";
+
+    const response = await fetch("http://localhost:5000/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ image: reader.result })
+    });
+
+    const data = await response.json();
+    resultDiv.innerHTML = data.result;
+  };
 }
 </script>
 
