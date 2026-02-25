@@ -21,6 +21,15 @@
     .container{
       margin-top:40px;
     }
+    textarea{
+      width:80%;
+      max-width:500px;
+      height:100px;
+      padding:10px;
+      border-radius:10px;
+      border:none;
+      font-size:16px;
+    }
     button{
       margin:15px;
       padding:15px 30px;
@@ -44,6 +53,7 @@
       padding:20px;
       border-radius:15px;
       display:none;
+      white-space:pre-line;
     }
   </style>
 </head>
@@ -53,43 +63,39 @@
 <header>👔 Pocket Stylist AI</header>
 
 <div class="container">
-  <p>Fotoğraf yükle, sana kombin ve saç modeli önerelim.</p>
+  <p>Kombinini yaz, sana stilist gibi önerelim.</p>
 
-  <input type="file" id="imageInput">
+  <textarea id="userInput" placeholder="Örn: Siyah oversize tişört ve beyaz sneaker ile nasıl kombin yapabilirim?"></textarea>
   <br>
-  <button onclick="analyzeImage()">Analiz Et</button>
+  <button onclick="askAI()">Analiz Et</button>
 
   <div id="result"></div>
 </div>
 
 <script>
-async function analyzeImage() {
-  const fileInput = document.getElementById("imageInput");
+async function askAI() {
+  const userText = document.getElementById("userInput").value;
   const resultDiv = document.getElementById("result");
 
-  if (!fileInput.files[0]) {
-    alert("Lütfen bir fotoğraf seç.");
+  if (!userText) {
+    alert("Lütfen bir şey yaz.");
     return;
   }
 
-  const reader = new FileReader();
-  reader.readAsDataURL(fileInput.files[0]);
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = "AI düşünüyor...";
 
-  reader.onload = async function() {
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = "Analiz ediliyor...";
+  const response = await fetch("http://localhost:5000/ask-ai", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message: userText })
+  });
 
-    const response = await fetch("http://localhost:5000/analyze", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ image: reader.result })
-    });
+  const data = await response.json();
 
-    const data = await response.json();
-    resultDiv.innerHTML = data.result;
-  };
+  resultDiv.innerHTML = data.reply;
 }
 </script>
 
