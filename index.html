@@ -74,7 +74,7 @@
 
 <script>
 async function askAI() {
-  const userText = document.getElementById("userInput").value;
+  const userText = document.getElementById("userInput").value.trim();
   const resultDiv = document.getElementById("result");
 
   if (!userText) {
@@ -85,17 +85,27 @@ async function askAI() {
   resultDiv.style.display = "block";
   resultDiv.innerHTML = "AI düşünüyor...";
 
-  const response = await fetch("http://localhost:5000/ask-ai", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ message: userText })
-  });
+  try {
+    const response = await fetch("http://localhost:5000/ask-ai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: userText })
+    });
 
-  const data = await response.json();
+    if (!response.ok) {
+      throw new Error("Sunucu hatası");
+    }
 
-  resultDiv.innerHTML = data.reply;
+    const data = await response.json();
+
+    resultDiv.innerHTML = data.reply || "Cevap alınamadı.";
+
+  } catch (error) {
+    console.error(error);
+    resultDiv.innerHTML = "Sunucuya bağlanılamadı. Backend çalışıyor mu kontrol et.";
+  }
 }
 </script>
 
